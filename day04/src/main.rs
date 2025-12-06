@@ -4,6 +4,8 @@ fn main() {
     let input = include_str!("../inputs/input.txt");
     let result = part_1(input);
     println!("Part 1: {result}");
+    let result = part_2(input);
+    println!("Part 2: {result}");
 }
 
 fn part_1(s: &str) -> u64 {
@@ -15,6 +17,27 @@ fn part_1(s: &str) -> u64 {
             let p = Position {x, y};
             if g[p] == '@' && num_adjacent_rolls(&g, p) < 4 {
                 count += 1;
+            }
+        }
+    }
+    count
+}
+
+fn part_2(s: &str) -> u64 {
+    let mut g: Grid = s.parse().expect("Cannot parse to grid");
+    let grid_len = g.len();
+    let mut count = 0;
+    let mut removable_rolls = true;
+    while removable_rolls {
+        removable_rolls = false;
+        for x in 0..grid_len.x {
+            for y in 0..grid_len.y {
+                let p = Position {x, y};
+                if g[p] == '@' && num_adjacent_rolls(&g, p) < 4 {
+                    removable_rolls = true;
+                    g[p] = '.';
+                    count += 1;
+                }
             }
         }
     }
@@ -41,5 +64,12 @@ mod tests {
         let input = include_str!("../inputs/sample.txt");
         let result = part_1(input);
         assert_eq!(result, 13);
+    }
+
+    #[test]
+    fn day_04_part_2_test() {
+        let input = include_str!("../inputs/sample.txt");
+        let result = part_2(input);
+        assert_eq!(result, 43);
     }
 }
